@@ -17,6 +17,7 @@
     let pad;
     let bricksGroup;
     let timerText, timer = 0;
+    let sounds = {};
     
     function preload() {
         game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -36,6 +37,8 @@
         game.load.image('brick_8', '../images/08.png', 100, 33);
         game.load.image('brick_9', '../images/09.png', 100, 33);
         game.load.image('brick_10', '../images/10.png', 100, 33);
+        game.load.audio('pad-bounce', ['../sounds/pad-bounce.mp3']);  
+        game.load.audio('brick-bounce', ['../sounds/brick-bounce.mp3']);  
     }
     
     function create() {
@@ -46,8 +49,7 @@
         // Génération des briques
         for (let y = 0; y < 5; y++) {
             for (let x = 0; x < 10; x++) {
-                let sprite = new Phaser.Sprite(game, x * 100 + (game.world.width - 1000) / 2, y * 33, 'brick_' + (x % 10 + 1));
-                // sprite.scale.setTo(0.2604, 0.2604); 
+                let sprite = new Phaser.Sprite(game, x * 100 + (game.world.width - 1000) / 2, 100 + y * 33, 'brick_' + (x % 10 + 1));
                 bricksGroup.add(sprite);
             }
         }
@@ -60,7 +62,7 @@
         ball.anchor.set(0.5);
         game.physics.arcade.enable(ball);
         ball.body.collideWorldBounds = true;
-        ball.body.velocity.set(300, -300);
+        ball.body.velocity.set(400, -400);
         ball.body.bounce.set(1);
         
         // Création du pad
@@ -73,13 +75,18 @@
         game.physics.arcade.checkCollision.down = false;
         ball.checkWorldBounds = true;
         ball.events.onOutOfBounds.add(function(){
-            // window.alert('Game over!');
-            // window.location.reload();
+            window.alert('Game over!');
+            window.location.reload();
         }, this);
     
         // Timing
-        timerText = game.add.text(5, 5, 'Temps: 0.0s', { font: '18px Arial', fill: '#ffff00' });
+        timerText = game.add.text(game.world.centerX, game.world.centerY, '0.0s', { font: '148px Arial', fill: 'rgba(255, 255, 255, 0.3)' });
+        timerText.anchor.set(0.5, 0.5);
         setInterval(() => timer += 100, 100);
+
+        // Sounds
+        sounds.padBounce = game.add.audio('pad-bounce');
+        sounds.brickBounce = game.add.audio('brick-bounce');
     }
     
     function update() {
@@ -92,7 +99,7 @@
             pad.x = game.input.x || game.world.width * 0.5;
         }
     
-        timerText.setText('Temps: ' + (timer / 1000).toFixed(1) + 's');
+        timerText.setText((timer / 1000).toFixed(1) + 's');
     }
     
     function render() {
@@ -101,6 +108,10 @@
     
     function ballHitBrick(ball, brick) {
         brick.kill();
+        sounds.brickBounce.play();
+
+        // Augmentation de la vitesse de la balle
+        ball.body.velocity.y = (ball.body.velocity.y > 0) ? ball.body.velocity.y + 10 : ball.body.velocity.y - 10;
     
         const remainingBalls = bricksGroup.children.reduce((total, brick) => brick.alive ? total + 1 : total, 0);
         if (remainingBalls === 0) {
@@ -110,7 +121,8 @@
     }
     
     function ballHitPad(ball, pad) {
-        ball.body.velocity.x = -1 * 5 * (pad.x - ball.x);
+        sounds.padBounce.play();
+        ball.body.velocity.x = -1 * 5 * (pad.x - ball.x) * 1.5;
     }
         
 })(window.APP);
