@@ -41,7 +41,6 @@ function create() {
 
     // Création du groupe de briques
     bricksGroup = game.add.physicsGroup();
-    bricksGroup.enableBody = true;
     // Génération des briques
     for (let y = 0; y < 5; y++) {
         for (let x = 0; x < 10; x++) {
@@ -72,8 +71,8 @@ function create() {
     game.physics.arcade.checkCollision.down = false;
     ball.checkWorldBounds = true;
     ball.events.onOutOfBounds.add(function(){
-        window.alert('Game over!');
-        window.location.reload();
+        // window.alert('Game over!');
+        // window.location.reload();
     }, this);
 
     // Timing
@@ -85,7 +84,11 @@ function update() {
     game.physics.arcade.collide(ball, bricksGroup, ballHitBrick);
     game.physics.arcade.collide(ball, pad, ballHitPad);
 
-    pad.x = game.input.x || game.world.width*0.5;
+    if (LeapInput.connected) {
+        pad.x = LeapInput.position.x;
+    } else {
+        pad.x = game.input.x || game.world.width * 0.5;
+    }
 
     timerText.setText('Temps: ' + (timer / 1000).toFixed(1) + 's');
 }
