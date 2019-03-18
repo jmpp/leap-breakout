@@ -2,6 +2,8 @@
 
 Simple jeu breakout, fonctionnant avec un Leap Motion
 
+<img src="https://imagizer.imageshack.com/img921/125/VMpiBX.gif" data-canonical-src="https://imagizer.imageshack.com/img921/125/VMpiBX.gif" width="320" />
+
 ## Installer le projet
 
 Clonez le repository et installez les dépendances : `npm install`
