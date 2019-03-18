@@ -25,6 +25,9 @@
     }
     
     function onFrame(frame) {
+        // Because the event "onDeviceStreaming" seems to be buggy sometimes
+        LeapInput.connected = true;
+
         let hand = frame.hands[0];
         if (!hand) return;
     
