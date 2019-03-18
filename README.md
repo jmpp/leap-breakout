@@ -4,6 +4,8 @@ Simple jeu breakout, fonctionnant avec un Leap Motion
 
 <img src="https://imagizer.imageshack.com/img921/125/VMpiBX.gif" data-canonical-src="https://imagizer.imageshack.com/img921/125/VMpiBX.gif" width="320" />
 
+DEMO : [https://jmpp.github.io/leap-breakout](https://jmpp.github.io/leap-breakout/)
+
 ## Installer le projet
 
 Clonez le repository et installez les dépendances : `npm install`
